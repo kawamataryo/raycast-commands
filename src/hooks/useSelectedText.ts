@@ -1,0 +1,19 @@
+import { getSelectedText, showToast, Toast } from "@raycast/api";
+import { usePromise } from "@raycast/utils";
+
+export function useSelectedText() {
+  const { data: selectedText, isLoading } = usePromise(async () => {
+    return await getSelectedText();
+  }, [], {
+    onError: async (error) => {
+      console.error("Error fetching selected text:", error);
+      await showToast({
+        style: Toast.Style.Failure,
+        title: "Error",
+        message: "Get selected text failed",
+      });
+    },
+  });
+
+  return { selectedText: selectedText || "", loading: isLoading };
+}
