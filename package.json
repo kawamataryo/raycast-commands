@@ -1,8 +1,8 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "myaicommands",
-  "title": "MyAICommands",
-  "description": "reply",
+  "name": "my-commands",
+  "title": "My Commands",
+  "description": "generate reply to the selected text",
   "icon": "extension-icon.png",
   "author": "kawamataryo",
   "categories": [
@@ -13,7 +13,7 @@
     {
       "name": "reply",
       "title": "Reply",
-      "description": "英文を翻訳して返信文を書くコマンド",
+      "description": "generate reply to the selected text",
       "mode": "view"
     }
   ],
