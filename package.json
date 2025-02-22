@@ -1,9 +1,9 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "my-commands",
-  "title": "My Commands",
-  "description": "generate reply to the selected text",
-  "icon": "extension-icon.png",
+  "name": "smart-reply",
+  "title": "Smart Reply - AI-Powered Multilingual Response Generator",
+  "description": "AI-powered multilingual translator and response generator with customizable languages and tones.",
+  "icon": "icon.png",
   "author": "kawamataryo",
   "categories": [
     "Productivity"
@@ -11,28 +11,124 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "reply",
-      "title": "Reply",
-      "description": "generate reply to the selected text",
+      "name": "generate-reply",
+      "title": "Generate Reply",
+      "description": "Generate reply to the selected text",
       "mode": "view"
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.91.1",
-    "@raycast/utils": "^1.18.1"
+    "@raycast/api": "^1.92.1",
+    "@raycast/utils": "^1.18.1",
+    "franc-min": "^6.2.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.21.0",
     "@raycast/eslint-config": "^1.0.11",
     "@types/node": "20.8.10",
     "@types/react": "18.3.3",
-    "biome": "^0.3.3",
-    "typescript": "^5.7.3"
+    "eslint": "^8.57.1",
+    "globals": "^16.0.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^8.24.1"
   },
   "scripts": {
     "build": "ray build",
     "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
     "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
-    "publish": "npx @raycast/api@latest publish",
-    "check": "biome check --write ./src"
-  }
+    "publish": "npx @raycast/api@latest publish"
+  },
+  "preferences": [
+    {
+      "name": "aiModel",
+      "title": "AI Model",
+      "description": "Select the AI model to use",
+      "type": "dropdown",
+      "required": true,
+      "default": "Google_Gemini_2.0_Flash",
+      "data": [
+        {
+          "title": "OpenAI GPT-4 Mini",
+          "value": "OpenAI_GPT4_Mini"
+        },
+        {
+          "title": "Google Gemini 2.0 Flash",
+          "value": "Google_Gemini_2.0_Flash"
+        },
+        {
+          "title": "Anthropic Claude 3.5 Haiku",
+          "value": "Anthropic_Claude_3.5_Haiku"
+        }
+      ]
+    },
+    {
+      "name": "targetLanguage",
+      "title": "Target Language",
+      "description": "Select the target language for translation",
+      "type": "dropdown",
+      "required": true,
+      "default": "ja",
+      "data": [
+        {
+          "title": "🇯🇵 Japanese",
+          "value": "ja"
+        },
+        {
+          "title": "🇺🇸 English",
+          "value": "en"
+        },
+        {
+          "title": "🇫🇷 French",
+          "value": "fr"
+        },
+        {
+          "title": "🇪🇸 Spanish",
+          "value": "es"
+        },
+        {
+          "title": "🇩🇪 German",
+          "value": "de"
+        },
+        {
+          "title": "🇮🇹 Italian",
+          "value": "it"
+        },
+        {
+          "title": "🇨🇳 Chinese",
+          "value": "zh"
+        },
+        {
+          "title": "🇰🇷 Korean",
+          "value": "ko"
+        },
+        {
+          "title": "🇵🇹 Portuguese",
+          "value": "pt"
+        },
+        {
+          "title": "🇷🇺 Russian",
+          "value": "ru"
+        },
+        {
+          "title": "🇳🇱 Dutch",
+          "value": "nl"
+        },
+        {
+          "title": "🇻🇳 Vietnamese",
+          "value": "vi"
+        },
+        {
+          "title": "🇹🇭 Thai",
+          "value": "th"
+        },
+        {
+          "title": "🇮🇩 Indonesian",
+          "value": "id"
+        }
+      ]
+    }
+  ]
 }

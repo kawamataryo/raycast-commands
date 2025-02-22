@@ -1,72 +1,87 @@
 import { AI } from "@raycast/api";
+import { AIModel, Language } from "./types";
 
-export const MODEL = AI.Model["Google_Gemini_2.0_Flash"];
+export const AI_MODELS: Record<AIModel, AI.Model> = {
+  OpenAI_GPT4_Mini: AI.Model.OpenAI_GPT4,
+  Google_Gemini_2_0_Flash: AI.Model["Google_Gemini_2.0_Flash"],
+  Anthropic_Claude_3_5_Haiku: AI.Model.Anthropic_Claude_Haiku,
+} as const;
+
+export const LANGUAGES: Record<Language, { name: string; flag: string }> = {
+  ja: { name: "Japanese", flag: "🇯🇵" },
+  en: { name: "English", flag: "🇺🇸" },
+  fr: { name: "French", flag: "🇫🇷" },
+  es: { name: "Spanish", flag: "🇪🇸" },
+  he: { name: "Hebrew", flag: "🇮🇱" },
+  sv: { name: "Swedish", flag: "🇸🇪" },
+  da: { name: "Danish", flag: "🇩🇰" },
+  fi: { name: "Finnish", flag: "🇫🇮" },
+  de: { name: "German", flag: "🇩🇪" },
+  it: { name: "Italian", flag: "🇮🇹" },
+  zh: { name: "Chinese", flag: "🇨🇳" },
+  ko: { name: "Korean", flag: "🇰🇷" },
+  pt: { name: "Portuguese", flag: "🇵🇹" },
+  ru: { name: "Russian", flag: "🇷🇺" },
+  nl: { name: "Dutch", flag: "🇳🇱" },
+  vi: { name: "Vietnamese", flag: "🇻🇳" },
+  th: { name: "Thai", flag: "🇹🇭" },
+  id: { name: "Indonesian", flag: "🇮🇩" },
+  hi: { name: "Hindi", flag: "🇮🇳" },
+  ar: { name: "Arabic", flag: "🇸🇦" },
+  bn: { name: "Bengali", flag: "🇧🇩" },
+  tr: { name: "Turkish", flag: "🇹🇷" },
+  uk: { name: "Ukrainian", flag: "🇺🇦" },
+  pl: { name: "Polish", flag: "🇵🇱" },
+} as const;
 
 export const PROMPTS = {
-  TRANSLATION: (selectedText: string) => `
-あなたは高性能な翻訳システムです。与えられた文章を自然な日本語に翻訳してください。
-翻訳文のみを出力し、元の文章や説明などは一切含めないでください。
+  TRANSLATION: (selectedText: string, targetLanguage: Language) => `
+You are a high-performance translation system. Please translate the given text into ${LANGUAGES[targetLanguage].name}.
+Output only the translation, without including the original text or any explanations.
 
-翻訳のルール：
-- 文化的な文脈を考慮し、適切な日本語表現を選択する
-- 原文のニュアンスをできるだけ保持する
+Translation rules:
+- Consider cultural context and choose appropriate expressions
+- Maintain the nuance of the original text as much as possible
 
-入力文：
+Input text:
 ${selectedText}
 `,
-  DETECTED_LANGUAGE: (selectedText: string) => `
-あなたは高精度の言語判定システムです。与えられたテキストの言語を判定し、対応する国旗の絵文字のみを返してください。それ以外の文字や説明は一切含めないでください。
-
-判定可能な言語と対応する絵文字：
-英語 → 🇬🇧
-フランス語 → 🇫🇷
-スペイン語 → 🇪🇸
-ポルトガル語 → 🇵🇹
-日本語 → 🇯🇵
-ドイツ語 → 🇩🇪
-イタリア語 → 🇮🇹
-中国語 → 🇨🇳
-韓国語 → 🇰🇷
-
-以下のルールに従ってください：
-- 絵文字以外の文字は一切出力しない
-- 複数の言語が混在する場合は、最も支配的な言語の絵文字を返す
-
-入力：
-${selectedText}`.trim(),
   REPLY: ({
     originalText,
     detectedLanguage,
     reply,
     tone,
+    translationStyle,
   }: {
     originalText: string;
     detectedLanguage: string;
     reply: string;
     tone: string;
+    translationStyle: string;
   }) => `
-あなたは多言語コミュニケーションの専門家です。以下のコメントに対する返信を、指定された言語とトーンで作成してください。
+You are a multilingual communication expert. Please create a reply in the specified language and tone for the following comment.
 
-原文コメント：
+Original comment:
 """
 ${originalText}
 """
 
-返信文または返信の内容：
+Reply content:
 """
 ${reply}
 """
 
-出力言語：${detectedLanguage}
-コミュニケーションのトーン：${tone}
+Output language: ${detectedLanguage}
+Communication tone: ${tone}
+Translation style: ${translationStyle}
 
-返信作成のルール：
-- 簡潔に内容を表現する
-- 文化的背景とローカライズを考慮する
-- 指定された言語の慣用句や一般的な表現を適切に使用する
-- 指定されたトーンを正確に反映する
-- 原文コメントのコンテキストに沿った自然な返信にする
+Reply creation rules:
+- Express content ${translationStyle === "simple" ? "in the simplest possible way" : translationStyle === "literal" ? "with word-for-word accuracy" : "naturally and idiomatically"}
+- ${translationStyle === "natural" ? "Use appropriate idioms and common expressions" : translationStyle === "simple" ? "Avoid complex expressions and idioms" : "Maintain strict word order where possible"}
+- Consider cultural background and localization
+- Accurately reflect the specified tone
+- Create a reply that aligns with the context of the original comment
 
-以下に返信文のみを出力してください：
+Please output only the reply text:
 `,
 } as const;

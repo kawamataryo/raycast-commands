@@ -1,27 +1,42 @@
-import { AI, showToast, Toast, Detail, Clipboard } from "@raycast/api";
+import { showToast, Toast, Detail, Clipboard, getPreferenceValues } from "@raycast/api";
 import { useAI } from "@raycast/utils";
 import { useEffect } from "react";
-import { MODEL, PROMPTS } from "../constants";
+import { AI_MODELS, PROMPTS } from "../constants";
+import { Preferences } from "../types";
 
 interface ResultProps {
   translationText: string;
   detectedLanguage: string;
   replyText: string;
   tone: string;
+  translationStyle: string;
 }
 
-export const Result = ({ translationText, detectedLanguage, replyText, tone }: ResultProps) => {
-  const { data: replyTranslationText, isLoading: isReplyTextLoading } = useAI(PROMPTS.REPLY({ originalText: translationText, detectedLanguage, reply: replyText, tone }), {
-    model: MODEL,
-    execute: !!translationText && !!detectedLanguage && !!replyText && !!tone,
-    creativity: "none",
-  });
+export const Result = ({ translationText, detectedLanguage, replyText, tone, translationStyle }: ResultProps) => {
+  const preferences = getPreferenceValues<Preferences>();
+  const { data: replyTranslationText, isLoading: isReplyTextLoading } = useAI(
+    PROMPTS.REPLY({
+      originalText: translationText,
+      detectedLanguage,
+      reply: replyText,
+      tone,
+      translationStyle,
+    }),
+    {
+      model: AI_MODELS[preferences.aiModel],
+      execute: !!translationText && !!detectedLanguage && !!replyText && !!tone && !!translationStyle,
+      creativity: "none",
+    },
+  );
 
-  const { data: reTranslationTextData, isLoading: isReTranslationTextLoading } = useAI(PROMPTS.TRANSLATION(replyTranslationText), {
-    model: MODEL,
-    execute: !!replyTranslationText,
-    creativity: "none",
-  });
+  const { data: reTranslationTextData, isLoading: isReTranslationTextLoading } = useAI(
+    PROMPTS.TRANSLATION(replyTranslationText, preferences.targetLanguage),
+    {
+      model: AI_MODELS[preferences.aiModel],
+      execute: !!replyTranslationText,
+      creativity: "none",
+    },
+  );
 
   useEffect(() => {
     if (replyTranslationText) {
@@ -36,7 +51,11 @@ export const Result = ({ translationText, detectedLanguage, replyText, tone }: R
 
   return (
     <Detail
-      markdown={replyTranslationText ? `### ${detectedLanguage} 返信文  \n\n\`\`\`\n${replyTranslationText}\n\`\`\`\n\n### 🇯🇵 翻訳結果  \n\n\`\`\`\n${reTranslationTextData}\n\`\`\`` : "Generating..."}
+      markdown={
+        replyTranslationText
+          ? `### ${detectedLanguage} Reply Text  \n\n\`\`\`\n${replyTranslationText}\n\`\`\`\n\n### 🇯🇵 翻訳結果  \n\n\`\`\`\n${reTranslationTextData}\n\`\`\``
+          : "Generating..."
+      }
       isLoading={isReplyTextLoading || isReTranslationTextLoading}
     />
   );

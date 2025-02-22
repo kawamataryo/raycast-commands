@@ -1,15 +1,19 @@
-# My Raycast Commands
+# Smart Reply
 
-## Get Started
+## How to use
 
-Run the development server
+1. Select the text you want to reply to.
+2. Run the `Generate Reply` command.
+3. The reply will be generated and displayed in the extension.
 
-```bash
-pnpm build
-```
+## Settings
 
-## Commands
+- `AI Model`: Select the AI model to use.
+- `Target Language`: Select the target language for translation.
 
-### ↩ Reply
+## Features
 
-Reply to the selected text with the specified language and tone.
+- Customizable languages and tones
+- AI-powered translation and reply generation
+- High-precision language detection
+- User-friendly interface
